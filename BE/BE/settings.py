@@ -118,6 +118,7 @@ CORS_ALLOW_METHODS = (
 CORS_ALLOW_HEADERS = (
 "accept",
 "Authorization",
+"refreshToken",
 "content-type",
 "user-agent",
 "x-csrftoken",
