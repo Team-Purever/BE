@@ -8,6 +8,12 @@ class Diary(models.Model):
     title = models.CharField(max_length=100)
     content = models.CharField(max_length=300)
     url = models.CharField(max_length=300)
+
     created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.name
+
+class Image(models.Model):   
+    url = models.ImageField(null=True, upload_to="", blank=True) # 이미지 컬럼 추가
     def __str__(self):
         return self.name
