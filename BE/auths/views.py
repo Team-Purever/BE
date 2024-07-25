@@ -38,7 +38,6 @@ def signup(request):
     except KakaoAccessTokenException | NaverAccessTokenException | GoogleAccessTokenException as e:
         return Response({'error': 'Failed to obtain access token', 'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-# 회원가입
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login(request):

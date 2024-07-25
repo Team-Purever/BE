@@ -3,7 +3,7 @@ from auths.models import User
 # Create your models here.
 
 class Diary(models.Model):   
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='diaries')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='diaries')
     pet_id = models.PositiveIntegerField()
     title = models.CharField(max_length=100)
     content = models.CharField(max_length=300)

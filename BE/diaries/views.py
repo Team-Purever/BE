@@ -2,13 +2,17 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ImageSerializer
+from .serializers import ImageSerializer, DiraySerializer
+from .models import Diary
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from auths.models import User
+from pets.models import Pet
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 # Create your views here.
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def img_create(request):
     serializers = ImageSerializer(data=request.data) # 꼭 !!!! files는 따로 request의 FILES로 속성을 지정해줘야 함
     if serializers.is_valid():
@@ -22,3 +26,30 @@ def img_create(request):
         }, status=status.HTTP_201_CREATED)
     else:
         return Response("실패!")
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def diary_create(request, petId):
+    auth_header = request.headers.get('Authorization')
+    _, token = auth_header.split()
+    access_token = AccessToken(token)
+    
+    if not Pet.objects.filter(pk=petId).exists():
+            return Response({'message': '존재하지 않는 petId 입니다..'}, status=status.HTTP_404_BAD_REQUEST)
+
+    user_id = access_token['user_id']
+    user = User.objects.get(pk=user_id)
+        
+    Diary.objects.create(
+            user= user,
+            pet_id=petId,
+            title=request.data.get('title'),
+            content=request.data.get('content'),
+            url=request.data.get('url'),
+    )
+    return Response({
+            'status': 201,
+            'message': "추억 일기장 작성 완료.",
+            'data': {}
+            
+          }, status=status.HTTP_201_CREATED)

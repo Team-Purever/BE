@@ -4,7 +4,6 @@ from .models import Diary, Image
 
 class DiraySerializer(serializers.ModelSerializer):
     user_id = UserSerializer(read_only=True)
-    imgfile = serializers.ImageField(required=False)
 
     class Meta:
         model = Diary
