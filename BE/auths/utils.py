@@ -244,5 +244,5 @@ def google_login(access_code):
         
         return user 
 
-    except NaverAccessTokenException as e:
+    except GoogleAccessTokenException as e:
         return Response({'error': 'Failed to obtain access token', 'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
