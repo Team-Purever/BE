@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from .models import Pet
-from .serializers import PetSerializer
+from .serializers import PetSerializer, PetImgSerializer
 
 """
 class PetList(ListCreateAPIView):
@@ -56,3 +56,11 @@ class PetDetail(APIView):
         pet = self.get_object(pk)
         pet.delete()
         return Response(status=status.HTTP_200_OK)
+
+class PetImgPreview(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        serializer = PetImgSerializer(data=request.data)
+        if serializer.is_vaild(raise_exception=True):
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
