@@ -33,7 +33,7 @@ def diary_create(request, petId):
     auth_header = request.headers.get('Authorization')
     _, token = auth_header.split()
     access_token = AccessToken(token)
-    
+
     if not Pet.objects.filter(pk=petId).exists():
             return Response({'message': '존재하지 않는 petId 입니다..'}, status=status.HTTP_404_BAD_REQUEST)
 
@@ -52,4 +52,28 @@ def diary_create(request, petId):
             'message': "추억 일기장 작성 완료.",
             'data': {}
             
-          }, status=status.HTTP_201_CREATED)
+        }, status=status.HTTP_201_CREATED)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def diary_edit(request, diairyId):
+
+    if not Diary.objects.filter(pk=diairyId).exists():
+            return Response({'message': '존재하지 않는 diaryId 입니다.'}, status=status.HTTP_404_BAD_REQUEST)
+
+    diary = Diary.objects.get(pk=diairyId)
+    
+
+    diary.url = request.data.get('url')
+    diary.content = request.data.get('content')
+    diary.save()
+    return Response({
+                'status': 200,
+                'message': "추억 일기장 수정 완료.",
+                'data': {}
+            }, status=status.HTTP_200_OK)
+
+
+
+
+

@@ -11,9 +11,9 @@ class Diary(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return self.name
+        return self.content
 
 class Image(models.Model):   
     url = models.ImageField(null=True, upload_to="", blank=True) # 이미지 컬럼 추가
     def __str__(self):
-        return self.name
+        return self.url
