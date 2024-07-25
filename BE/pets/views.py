@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
@@ -19,6 +20,7 @@ class PetDetail(RetrieveUpdateDestroyAPIView):
 """
 
 class PetList(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         pets = Pet.objects.all()
         serializer = PetSerializer(pets, many=True)
@@ -32,6 +34,7 @@ class PetList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PetDetail(APIView):
+    permission_classes = [IsAuthenticated]
     def get_object(request, pk):
         pet = get_object_or_404(Pet, pk=pk)
         return pet
@@ -53,4 +56,3 @@ class PetDetail(APIView):
         pet = self.get_object(pk)
         pet.delete()
         return Response(status=status.HTTP_200_OK)
-
