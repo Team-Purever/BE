@@ -9,11 +9,11 @@ class DiraySerializer(serializers.ModelSerializer):
         model = Diary
         exclude = ['id']
 
-    def update(self, instance, validated_data):
+class DiraySerializer2(serializers.ModelSerializer):
 
-        instance.content = validated_data.get('content', instance.content)
-        instance.url = validated_data.get('url', instance.url)
-        return super().update(instance, validated_data) 
+    class Meta:
+        model = Diary
+        exclude = ['id', 'user']
 
 class ImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False, source="url")
