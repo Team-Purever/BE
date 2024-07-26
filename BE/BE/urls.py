@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('auths.urls')),
     path('', include('pets.urls')),
+    path('diaries/', include('diaries.urls')),
 ]
 
 # Media 파일 url 주소 추가

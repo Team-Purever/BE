@@ -96,19 +96,41 @@ def refreshToken(request):
     }, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET', 'PATCH', 'DELETE'])
+# 사용자 정보 수정 및 회원 탈퇴
+@api_view(['PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def user_detail(request):
-    user = User.objects.get(platformId = request.user.platformId)
-    if request.method == 'GET':
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    elif request.method == 'PATCH':
+    auth_header = request.headers.get('Authorization')
+    _, token = auth_header.split()
+    access_token = AccessToken(token)
+    user_id = access_token['user_id']
+    user = User.objects.get(pk=user_id)
+
+    # 정보 수정
+    if request.method == 'PATCH':
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({
+                    "status": 200,
+                    "message": "사용자 정보 수정 완료.",
+                    "data": {
+                        "user": {
+                            "platformId": serializer.data['platformId'],
+                            "provider": serializer.data['provider'],
+                            "nickname": serializer.data['nickname'],
+                            "email": serializer.data['email'],
+                            "number": serializer.data['number'],
+                        }
+                    }    
+                }, status=status.HTTP_200_OK)
+            
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # 회원 탈퇴
     elif request.method == 'DELETE':
         user.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response({
+            "status": 200,
+            "message": "회원 탈퇴 완료.",
+            "data": {}    
+        }, status=status.HTTP_200_OK)
