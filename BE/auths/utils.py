@@ -15,8 +15,7 @@ class NaverAccessTokenException(Exception):
 
 class GoogleAccessTokenException(Exception):
     pass
-# 로그인 페이지를 통해 인증을 마치고 access_code를 받아, 카카오 API를 통해 access token을 교환
-# access token : 사용자가 카카오 API에 접근 할 수 있는 권한을 나타냄
+
 
 def exchange_kakao_access_token(access_code):
     response = requests.post(
@@ -63,7 +62,7 @@ def kakao_signup(access_code):
         # 새로운 사용자 생성
         user = User.objects.create(
             username= nickname + str(kakao_id),
-            platFormId=kakao_id,
+            platformId=kakao_id,
             provider='kakao',
             email=email,
             nickname=nickname,
@@ -82,17 +81,15 @@ def kakao_login(access_code):
         kakao_user_info = get_kakao_user_info(access_token)
         kakao_id = kakao_user_info['id']
         
-        if not User.objects.filter(platFormId=kakao_id).exists():
+        if not User.objects.filter(platformId=kakao_id).exists():
             return Response({'message': '존재하지 않는 유저입니다.'}, status=status.HTTP_404_NOT_FOUND)
 
         # 회원가입 되어 있는 사용자 -> 로그인
-        user = User.objects.get(platFormId=kakao_id)
-        
+        user = User.objects.get(platformId=kakao_id)
         return user 
 
     except KakaoAccessTokenException as e:
         return Response({'error': 'Failed to obtain access token', 'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 def exchange_naver_access_token(access_code):
@@ -133,13 +130,13 @@ def naver_signup(access_code):
         email = naver_user_info.get('response').get('email')
         nickname = naver_user_info.get('response').get('name')
         # 사용자가 이미 존재하는지 확인
-        if User.objects.filter(platFormId=naver_id).exists():
+        if User.objects.filter(platformId=naver_id).exists():
             return Response({'message': '이미 존재하는 회원입니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # 새로운 사용자 생성
         user = User.objects.create(
             username= nickname + naver_id,
-            platFormId=naver_id,
+            platformId=naver_id,
             provider='naver',
             email=email,
             nickname=nickname,
@@ -160,11 +157,11 @@ def naver_login(access_code):
         naver_user_info = get_naver_user_info(access_token)
         naver_id = naver_user_info.get('response').get('id')
         # 사용자가 존재하는지 확인
-        if not User.objects.filter(platFormId=naver_id).exists():
+        if not User.objects.filter(platformId=naver_id).exists():
             return Response({'message': '존재하지 않는 유저입니다.'}, status=status.HTTP_404_NOT_FOUND)
 
         # 회원가입 되어 있는 사용자 -> 로그인
-        user = User.objects.get(platFormId=naver_id)
+        user = User.objects.get(platformId=naver_id)
         
         return user 
 
@@ -210,13 +207,13 @@ def google_signup(access_code):
         email = google_user_info.get('email')
         nickname = google_user_info.get('name')
         # 사용자가 이미 존재하는지 확인
-        if User.objects.filter(platFormId=google_id).exists():
+        if User.objects.filter(platformId=google_id).exists():
             return Response({'message': '이미 존재하는 회원입니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # 새로운 사용자 생성
         user = User.objects.create(
             username= nickname + google_id,
-            platFormId=google_id,
+            platformId=google_id,
             provider='google',
             email=email,
             nickname=nickname,
@@ -236,11 +233,11 @@ def google_login(access_code):
         google_id = google_user_info.get('sub')
 
         # 사용자가 존재하는지 확인
-        if not User.objects.filter(platFormId=google_id).exists():
+        if not User.objects.filter(platformId=google_id).exists():
             return Response({'message': '존재하지 않는 유저입니다.'}, status=status.HTTP_404_NOT_FOUND)
 
         # 회원가입 되어 있는 사용자 -> 로그인
-        user = User.objects.get(platFormId=google_id)
+        user = User.objects.get(platformId=google_id)
         
         return user 
 
