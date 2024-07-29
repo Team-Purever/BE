@@ -5,7 +5,7 @@ class Pet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pets', null=True)
     name = models.CharField(max_length=100)
     age = models.PositiveIntegerField()
-    url = models.ImageField(upload_to='pet_photos/')
+    url = models.CharField(max_length=300)
 
     def __str__(self):
         return self.name

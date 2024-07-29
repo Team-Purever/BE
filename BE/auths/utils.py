@@ -49,6 +49,7 @@ def get_kakao_user_info(access_token):
 def kakao_signup(access_code):
             
     try: 
+
         token_response = exchange_kakao_access_token(access_code)
         access_token = token_response['access_token']
         kakao_user_info = get_kakao_user_info(access_token)
@@ -56,9 +57,8 @@ def kakao_signup(access_code):
         email = kakao_user_info.get('kakao_account').get('email')
         nickname = kakao_user_info.get('properties').get('nickname')
         # 사용자가 이미 존재하는지 확인
-        if User.objects.filter(platFormId=kakao_id).exists():
+        if User.objects.filter(platformId=kakao_id).exists():
             return Response({'message': '이미 존재하는 회원입니다.'}, status=status.HTTP_400_BAD_REQUEST)
-
         # 새로운 사용자 생성
         user = User.objects.create(
             username= nickname + str(kakao_id),
@@ -68,6 +68,7 @@ def kakao_signup(access_code):
             nickname=nickname,
             number=""
         )
+        print(user)
         user.set_unusable_password()  # 소셜 로그인 사용자는 비밀번호를 직접 설정하지 않음
         user.save()
         return user

@@ -13,6 +13,6 @@ class Diary(models.Model):
         return self.content
 
 class Image(models.Model):   
-    url = models.ImageField(null=True, upload_to="", blank=True) # 이미지 컬럼 추가
+    url = models.ImageField(null=True, upload_to="'diary_photos'", blank=True) # 이미지 컬럼 추가
     def __str__(self):
         return self.url

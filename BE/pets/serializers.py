@@ -9,9 +9,11 @@ class PetSerializer(serializers.ModelSerializer):
 
 
 class PetImgSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False, source="url")
+    
     class Meta:
         model = PetImg
-        fields = ['id', 'url']
+        fields = "__all__"
 
 
 """

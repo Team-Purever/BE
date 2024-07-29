@@ -9,7 +9,6 @@ from .models import Pet, PetImg
 from .serializers import PetSerializer, PetImgSerializer
 from auths.models import User
 
-
 class PetList(APIView):
     permission_classes = [IsAuthenticated]
     # 전체 반려동물 조회
@@ -159,13 +158,18 @@ class PetImgRegister(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = PetImgSerializer(data=request.data)
-        if serializer.is_vaild(raise_exception=True):
-            serializer.save()
-            return Response({
-                "status": 201,
-                "message": "반려동물 사진 등록 완료.",
-                "data": {
-                    "url": serializer.data['url']
-                }
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try: 
+
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response({
+                    "status": 201,
+                    "message": "반려동물 사진 등록 완료.",
+                    "data": {
+                        "url": serializer.data['url']
+                    }
+                }, status=status.HTTP_201_CREATED)
+
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
