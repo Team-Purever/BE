@@ -107,22 +107,20 @@ def user_detail(request):
     access_token = AccessToken(token)
     user_id = access_token['user_id']
     user = User.objects.get(pk=user_id)
-
     # 정보 수정
     if request.method == 'PATCH':
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
+            print("hde")
             serializer.save()
             return Response({
                 "status": 200,
                 "message": "사용자 정보 수정 완료.",
                 "data": {
                     "user": {
-                        "platformId": serializer.data['platformId'],
-                        "provider": serializer.data['provider'],
-                        "nickname": serializer.data['nickname'],
-                        "email": serializer.data['email'],
-                        "number": serializer.data['number'],
+                        "nickname": serializer.data.get('nickname'),
+                        "email": serializer.data.get('email'),
+                        "number": serializer.data.get('number'),
                     }
                 }    
             }, status=status.HTTP_200_OK)
