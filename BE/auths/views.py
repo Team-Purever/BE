@@ -59,8 +59,8 @@ def login(request):
             'status': 200,
             'message': "로그인에 성공했습니다.",
             'data': {
-                 'refreshToken': str(refresh),
-                 'accessToken': str(refresh.access_token),
+                'refreshToken': str(refresh),
+                'accessToken': str(refresh.access_token),
             }
         }, status=status.HTTP_201_CREATED)
     except KakaoAccessTokenException | NaverAccessTokenException | GoogleAccessTokenException as e:
@@ -112,18 +112,18 @@ def user_detail(request):
         if serializer.is_valid():
             serializer.save()
             return Response({
-                    "status": 200,
-                    "message": "사용자 정보 수정 완료.",
-                    "data": {
-                        "user": {
-                            "platformId": serializer.data['platformId'],
-                            "provider": serializer.data['provider'],
-                            "nickname": serializer.data['nickname'],
-                            "email": serializer.data['email'],
-                            "number": serializer.data['number'],
-                        }
-                    }    
-                }, status=status.HTTP_200_OK)
+                "status": 200,
+                "message": "사용자 정보 수정 완료.",
+                "data": {
+                    "user": {
+                        "platformId": serializer.data['platformId'],
+                        "provider": serializer.data['provider'],
+                        "nickname": serializer.data['nickname'],
+                        "email": serializer.data['email'],
+                        "number": serializer.data['number'],
+                    }
+                }    
+            }, status=status.HTTP_200_OK)
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # 회원 탈퇴
