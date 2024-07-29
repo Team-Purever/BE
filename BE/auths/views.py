@@ -132,5 +132,5 @@ def user_detail(request):
         return Response({
             "status": 200,
             "message": "회원 탈퇴 완료.",
-            "data": {}    
+            "data": {}
         }, status=status.HTTP_200_OK)
