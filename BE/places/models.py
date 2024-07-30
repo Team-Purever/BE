@@ -12,7 +12,7 @@ class Place(models.Model):
     address = models.CharField(max_length=100)
     number = models.CharField(max_length=100)
     url = models.CharField(max_length=100)
-    imgUrl = models.CharField(max_length=100)
+    imgUrl = models.ImageField(upload_to='place_photos')
     
     def __str__(self):
         return self.name
