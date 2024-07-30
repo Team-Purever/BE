@@ -35,6 +35,25 @@ def exchange_kakao_access_token(access_code):
         raise KakaoAccessTokenException(response.json())
     return response.json()
 
+def exchange_kakao_access_token2(access_code):
+    response = requests.post(
+        'https://kauth.kakao.com/oauth/token',
+        headers={
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+        },
+        data={
+            'grant_type': 'authorization_code',
+            'client_id': os.environ.get('KAKAO_REST_API_KEY'),
+            'client_secret': os.environ.get('KAKAO_CLIENT_SECRET'),
+            'redirect_uri': os.environ.get('KAKAO_SIGNUP_REDIRECT_URI'),
+            'code': access_code,
+        },
+    )
+    if response.status_code >= 300:
+        raise KakaoAccessTokenException(response.json())
+    return response.json()
+
+
 def get_kakao_user_info(access_token):
     response = requests.get(
         'https://kapi.kakao.com/v2/user/me',
@@ -50,7 +69,7 @@ def kakao_signup(access_code):
             
     try: 
 
-        token_response = exchange_kakao_access_token(access_code)
+        token_response = exchange_kakao_access_token2(access_code)
         access_token = token_response['access_token']
         kakao_user_info = get_kakao_user_info(access_token)
         kakao_id = kakao_user_info['id']
@@ -188,6 +207,25 @@ def exchange_google_access_token(access_code):
         raise GoogleAccessTokenException(response.json())
     return response.json()
 
+def exchange_google_access_token2(access_code):
+    response = requests.post(
+        'https://oauth2.googleapis.com/token',
+        headers={
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+        },
+        data={
+            'grantType': 'authorization_code',
+            'clientId': os.environ.get('GOOGLE_REST_API_KEY'),
+            'clientSecret': os.environ.get('GOOGLE_CLIENT_SECRET'),
+            'redirectUri': os.environ.get('GOOGLE_SIGNUP_REDIRECT_URI'),
+            'code': urllib.parse.unquote(access_code, encoding='utf-8'),
+        },
+    )
+    if response.status_code >= 300:
+        raise GoogleAccessTokenException(response.json())
+    return response.json()
+
+
 def get_google_user_info(access_token):
     response = requests.get(
         'https://www.googleapis.com/oauth2/v3/userinfo',
@@ -201,7 +239,7 @@ def get_google_user_info(access_token):
 
 def google_signup(access_code):
     try: 
-        token_response = exchange_google_access_token(access_code)
+        token_response = exchange_google_access_token2(access_code)
         access_token = token_response['access_token']
         google_user_info = get_google_user_info(access_token)
         google_id = google_user_info.get('sub')
