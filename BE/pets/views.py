@@ -25,6 +25,7 @@ class PetList(APIView):
             {
                 "petId": pet['id'],
                 "name": pet['name'],
+                "age": pet['age'],
                 "url": pet['url']
             } for pet in serializer.data
         ]
@@ -87,6 +88,7 @@ class PetDetail(APIView):
                     "pet": {
                         "petId": serializer.data['id'],
                         "name": serializer.data['name'],
+                        "age": serializer.data['age'],
                         "url": serializer.data['url']
                     }
                 }    
@@ -118,6 +120,7 @@ class PetDetail(APIView):
                         "pet": {
                             "petId": serializer.data['id'],
                             "name": serializer.data['name'],
+                            "age": serializer.data['age'],
                             "url": serializer.data['url']
                         }
                     }    
