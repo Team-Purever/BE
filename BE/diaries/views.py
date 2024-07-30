@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import ImageSerializer, DiraySerializer, DiraySerializer2
+from pets.serializers import PetSerializer
 from .models import Diary
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from auths.models import User
@@ -14,7 +15,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def img_create(request):
-    serializers = ImageSerializer(data=request.data) # 꼭 !!!! files는 따로 request의 FILES로 속성을 지정해줘야 함
+    serializers = ImageSerializer(data=request.data)
     if serializers.is_valid():
         serializers.save()
         return Response({
@@ -82,9 +83,9 @@ def all_diary(request, petId):
     _, token = auth_header.split()
     access_token = AccessToken(token)
 
-    # if not Pet.objects.filter(pk=petId).exists():
-    #         return Response({'message': '존재하지 않는 petId 입니다..'}, status=status.HTTP_404_NOT_FOUND)
-    #
+    if not Pet.objects.filter(pk=petId).exists():
+            return Response({'message': '존재하지 않는 petId 입니다..'}, status=status.HTTP_404_NOT_FOUND)
+    
     #  팻조회 필요
     #
     user_id = access_token['user_id']
@@ -93,6 +94,9 @@ def all_diary(request, petId):
     diaries = Diary.objects.filter(user=user, pet_id=petId)
     serializer = DiraySerializer2(diaries, many=True)
     
+    pet = Pet.objects.get(pk=petId)
+    serializer2 = PetSerializer(pet)
+
     response_diaires = serializer.data 
 
     response_diaires.sort(key = lambda x: x.get('created_at'))
@@ -101,13 +105,12 @@ def all_diary(request, petId):
                 'status': 200,
                 'message': "반려동물 추억 일기장 조회 완료.",
                 'data': {
-                           "name": "태백이",
-                            "age": 12,
-                             "url": "/img/filename.jpg",
+                           "name": serializer2.data.get('name'),
+                            "age": serializer2.data.get('age'),
+                             "url": serializer2.data.get('url'),
                              "diaries": response_diaires
 
                 }
             }, status=status.HTTP_200_OK)
-    return Response(serializer.data)
     
     
