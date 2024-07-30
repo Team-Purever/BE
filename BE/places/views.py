@@ -25,27 +25,22 @@ class PlaceList(APIView):
         paginator.page_size = 6
         places = paginator.paginate_queryset(queryset, request)
         serializer = PlaceSerializer(places, many=True)
-        return paginator.get_paginated_response(serializer.data)
-    
-"""
-# 노션 API 명세표대로 나타내고 싶으면 이렇게 하면 됨!
         serialized_data = [
             {
+                "id": place['id'],
                 "name": place['name'],
                 "address": place['address'],
                 "number": place['number'],
                 "url": place['url'],
-                "imgUrl": place['imgUrl']
+                "imgUrl": place['imgUrl']    
             } for place in serializer.data
         ]
-        return Response({
+        return paginator.get_paginated_response({
             "status": 200,
-            "message": "웰다잉 장소 조회 완료.",
-            "data": {
-                "places": serialized_data
-            }
+            "message": "웰다잉 플레이스 조회 완료.",
+            "data": serialized_data
         })
-"""
+
 
 class PlaceRegister(APIView):   
     permission_classes = [AllowAny] 
