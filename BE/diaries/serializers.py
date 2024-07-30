@@ -13,7 +13,7 @@ class DiraySerializer2(serializers.ModelSerializer):
 
     class Meta:
         model = Diary
-        exclude = ['id', 'user']
+        exclude = ['user']
 
 class ImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False, source="url")
