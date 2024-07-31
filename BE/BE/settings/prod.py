@@ -6,5 +6,6 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = (
     "http://ec2-3-24-194-74.ap-southeast-2.compute.amazonaws.com",
+    "http://localhost:3000"
 )
 ALLOWED_HOSTS = ['.ap-northeast-2.compute.amazonaws.com']
