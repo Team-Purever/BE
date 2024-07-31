@@ -189,7 +189,7 @@ USE_TZ = False  # False 로 설정해야 DB에 변경 된 TIME_ZONE 이 반영 �
 STATIC_URL = 'static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')    # ImageField 활용하기 위해 추가
 MEDIA_URL = 'media/'
-
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -197,3 +197,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'auths.User'  # settings.py에서 우리가 만든 유저인 User 사용하도록.
 ACCOUNT_LOGOUT_ON_GET = True
+
+
